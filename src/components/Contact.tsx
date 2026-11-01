@@ -3,9 +3,8 @@ import { ArrowUpRight, Loader2 } from "lucide-react";
 import { profile } from "../data/content";
 import { Reveal, SectionHead } from "./Reveal";
 
-type Status = "idle" | "sending" | "sent" | "error" | "unavailable" | "rate-limited";
+type Status = "idle" | "sending" | "sent" | "error";
 
-const API = (import.meta.env.VITE_API_URL as string | undefined) ?? "";
 const WEB3FORMS_KEY =
   (import.meta.env.VITE_WEB3FORMS_KEY as string | undefined) || "4d7efd35-be40-4d0c-a53c-ef03d08d788c";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -45,60 +44,38 @@ export function Contact() {
 
     setStatus("sending");
     try {
-      if (WEB3FORMS_KEY) {
-        if (form.website.trim()) {
-          setStatus("sent");
-          setForm({ name: "", email: "", message: "", website: "" });
-          return;
-        }
-
-        const res = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_KEY,
-            name: form.name.trim(),
-            email: form.email.trim(),
-            message: form.message.trim(),
-            subject: `Portfolio message from ${form.name.trim()}`,
-            from_name: "Portfolio Contact Form",
-          }),
-        });
-
-        const data = (await res.json().catch(() => ({}))) as { success?: boolean };
-        if (res.ok && data.success) {
-          setStatus("sent");
-          setForm({ name: "", email: "", message: "", website: "" });
-        } else {
-          setStatus("error");
-        }
+      // Honeypot: bots fill it, people can't see it
+      if (form.website.trim()) {
+        setStatus("sent");
+        setForm({ name: "", email: "", message: "", website: "" });
         return;
       }
 
-      const res = await fetch(`${API}/api/contact`, {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          subject: `Portfolio message from ${form.name.trim()}`,
+          from_name: "Portfolio Contact Form",
+        }),
       });
-      if (res.ok) {
+
+      const data = (await res.json().catch(() => ({}))) as { success?: boolean };
+      if (res.ok && data.success) {
         setStatus("sent");
         setForm({ name: "", email: "", message: "", website: "" });
-      } else if (res.status === 429) {
-        setStatus("rate-limited");
-      } else if (res.status === 503 || res.status === 404) {
-        setStatus("unavailable");
-      } else if (res.status === 422) {
-        const data = (await res.json().catch(() => ({}))) as { errors?: Errors };
-        setErrors(data.errors ?? {});
-        setStatus("idle");
       } else {
         setStatus("error");
       }
     } catch {
-      setStatus("unavailable");
+      setStatus("error");
     }
   };
 
@@ -248,15 +225,6 @@ export function Contact() {
 
                 <p id="form-status" role="status" aria-live="polite" className="text-[12px]">
                   {status === "sent" && <span className="text-bone">Sent. I'll reply to the address you gave.</span>}
-                  {status === "rate-limited" && (
-                    <span className="text-signal">
-                      You've sent too many messages recently. Please wait a few minutes before trying again, or{" "}
-                      <a className="underline underline-offset-4" href={mailto}>
-                        email me directly
-                      </a>
-                      .
-                    </span>
-                  )}
                   {status === "error" && (
                     <span className="text-signal">
                       Something went wrong on my end. Try again, or{" "}
@@ -264,15 +232,6 @@ export function Contact() {
                         email me directly
                       </a>
                       .
-                    </span>
-                  )}
-                  {status === "unavailable" && (
-                    <span className="text-signal">
-                      The message service isn't reachable right now, so nothing was sent.{" "}
-                      <a className="underline underline-offset-4" href={mailto}>
-                        open a prefilled email draft
-                      </a>{" "}
-                      instead.
                     </span>
                   )}
                 </p>

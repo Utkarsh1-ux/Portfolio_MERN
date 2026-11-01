@@ -1,6 +1,5 @@
 ﻿# Dependencies
 node_modules
-server/node_modules
 
 # Production builds
 dist
@@ -10,9 +9,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
-server/.env
-server/.env.*
-!server/.env.example
 
 # IDE & Editor files
 .vscode/

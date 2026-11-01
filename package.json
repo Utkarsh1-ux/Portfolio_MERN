@@ -4,13 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n web,api -c auto \"vite\" \"npm --prefix server run dev\"",
-    "dev:web": "vite",
-    "dev:api": "npm --prefix server run dev",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -b",
-    "setup": "npm install && npm --prefix server install"
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
@@ -25,7 +22,6 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
-    "concurrently": "^10.0.6",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.3.5"
