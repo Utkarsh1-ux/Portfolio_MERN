@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { ArrowUpRight, Loader2 } from "lucide-react";
+import { ArrowUpRight, Loader2, Mail, Download } from "lucide-react";
 import { profile } from "../data/content";
 import { Reveal, SectionHead } from "./Reveal";
 
@@ -89,57 +89,69 @@ export function Contact() {
   const mailto = `mailto:${profile.email}?subject=${encodeURIComponent("Portfolio contact")}&body=${encodeURIComponent(mailtoBody)}`;
 
   return (
-    <section id="contact" className="relative pb-16 pt-24 md:pt-36">
+    <section id="contact" className="relative pb-16 pt-20 md:pt-32">
       <div className="mx-auto max-w-7xl px-5 md:px-10">
-        <SectionHead no="05" title="Contact" />
+        <SectionHead no="05" title="Get in Touch" />
 
-        <div className="grid gap-16 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-6">
+        <div className="grid gap-16 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-6 space-y-6">
             <Reveal>
-              <h2 className="display text-[clamp(2.8rem,7vw,6rem)]">
+              <h2 className="display text-[clamp(2.8rem,6.4vw,5.6rem)] leading-none">
                 Hiring for a
                 <br />
                 <span className="italic text-signal">job / internship?</span>
               </h2>
-              <p className="mt-6 max-w-md text-[14px] text-mute">
-                I'm open to full-stack developer roles and internships on teams shipping real, scalable products. Email is the
-                fastest way to reach me.
+              <p className="mt-6 max-w-md text-[15px] leading-relaxed text-mute">
+                I'm actively looking for full-stack developer roles and internships where I can contribute to real-world
+                products, collaborate with experienced engineers, and build scalable systems.
               </p>
             </Reveal>
 
-            <Reveal className="mt-10">
+            <Reveal className="pt-2">
               <a
                 href={`mailto:${profile.email}`}
-                className="link-underline break-all text-[clamp(1.05rem,2.6vw,1.6rem)] tracking-tight"
+                className="link-underline inline-flex items-center gap-2 break-all text-[clamp(1.1rem,2.4vw,1.6rem)] tracking-tight text-bone hover:text-signal"
               >
+                <Mail size={18} className="text-signal shrink-0" />
                 {profile.email}
               </a>
-              <ul className="mt-8 flex gap-8">
-                {[
-                  ["GitHub", profile.github],
-                  ["LinkedIn", profile.linkedin],
-                  ["Resume", profile.resume],
-                ].map(([label, href]) => (
-                  <li key={label}>
-                    <a
-                      href={href}
-                      {...(label === "Resume" ? { download: "Utkarsh_Raj_Resume.pdf" } : { target: "_blank", rel: "noreferrer" })}
-                      className="label inline-flex items-center gap-1 transition-colors hover:!text-signal"
-                    >
-                      {label}
-                      <ArrowUpRight size={12} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
+
+              <div className="mt-8 flex flex-wrap gap-4 sm:gap-6">
+                <a
+                  href={profile.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="label inline-flex items-center gap-1.5 border border-line bg-panel px-3 py-1.5 transition-colors hover:border-signal hover:!text-signal text-bone"
+                >
+                  GitHub <ArrowUpRight size={12} />
+                </a>
+                <a
+                  href={profile.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="label inline-flex items-center gap-1.5 border border-line bg-panel px-3 py-1.5 transition-colors hover:border-signal hover:!text-signal text-bone"
+                >
+                  LinkedIn <ArrowUpRight size={12} />
+                </a>
+                <a
+                  href={profile.resume}
+                  download="Utkarsh_Raj_Resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="label inline-flex items-center gap-1.5 border border-signal/40 bg-signal/10 px-3 py-1.5 text-signal transition-colors hover:bg-signal hover:text-ink font-medium"
+                >
+                  <Download size={12} />
+                  Download Resume PDF
+                </a>
+              </div>
             </Reveal>
           </div>
 
           <Reveal className="lg:col-span-6">
-            <form onSubmit={submit} noValidate className="space-y-7" aria-describedby="form-status">
+            <form onSubmit={submit} noValidate className="border border-line bg-panel p-6 sm:p-8 space-y-6" aria-describedby="form-status">
               <div>
-                <label htmlFor="c-name" className="label">
-                  Name
+                <label htmlFor="c-name" className="label text-[11px] text-bone">
+                  Your Name
                 </label>
                 <input
                   id="c-name"
@@ -147,19 +159,20 @@ export function Contact() {
                   value={form.name}
                   onChange={set("name")}
                   autoComplete="name"
+                  placeholder="e.g. Sarah Jenkins"
                   maxLength={100}
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "e-name" : undefined}
                 />
                 {errors.name && (
-                  <p id="e-name" className="mt-1 text-[12px] text-signal">
+                  <p id="e-name" className="mt-1 text-[12px] text-signal font-mono">
                     {errors.name}
                   </p>
                 )}
               </div>
               <div>
-                <label htmlFor="c-email" className="label">
-                  Email
+                <label htmlFor="c-email" className="label text-[11px] text-bone">
+                  Email Address
                 </label>
                 <input
                   id="c-email"
@@ -168,32 +181,34 @@ export function Contact() {
                   value={form.email}
                   onChange={set("email")}
                   autoComplete="email"
+                  placeholder="e.g. sarah@company.com"
                   maxLength={200}
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "e-email" : undefined}
                 />
                 {errors.email && (
-                  <p id="e-email" className="mt-1 text-[12px] text-signal">
+                  <p id="e-email" className="mt-1 text-[12px] text-signal font-mono">
                     {errors.email}
                   </p>
                 )}
               </div>
               <div>
-                <label htmlFor="c-message" className="label">
+                <label htmlFor="c-message" className="label text-[11px] text-bone">
                   Message
                 </label>
                 <textarea
                   id="c-message"
-                  rows={5}
+                  rows={4}
                   className={`${field} resize-none`}
                   value={form.message}
                   onChange={set("message")}
+                  placeholder="Tell me about your team, role opening, or project..."
                   maxLength={3000}
                   aria-invalid={!!errors.message}
                   aria-describedby={errors.message ? "e-message" : undefined}
                 />
                 {errors.message && (
-                  <p id="e-message" className="mt-1 text-[12px] text-signal">
+                  <p id="e-message" className="mt-1 text-[12px] text-signal font-mono">
                     {errors.message}
                   </p>
                 )}
@@ -207,11 +222,11 @@ export function Contact() {
                 </label>
               </div>
 
-              <div className="flex flex-wrap items-center gap-5">
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="group relative inline-flex min-w-40 items-center justify-center gap-3 overflow-hidden border border-signal bg-signal px-6 py-3 text-[12px] uppercase tracking-[0.14em] text-ink transition-opacity disabled:opacity-60"
+                  className="group relative inline-flex min-w-40 items-center justify-center gap-3 overflow-hidden border border-signal bg-signal px-6 py-3 text-[12px] uppercase tracking-[0.14em] text-ink transition-opacity disabled:opacity-60 cursor-pointer font-bold"
                 >
                   <span
                     aria-hidden
@@ -219,15 +234,15 @@ export function Contact() {
                   />
                   <span className="relative flex items-center gap-2">
                     {status === "sending" && <Loader2 size={14} className="animate-spin" />}
-                    {status === "sending" ? "Sending" : "Send message"}
+                    {status === "sending" ? "Sending..." : "Send Message"}
                   </span>
                 </button>
 
                 <p id="form-status" role="status" aria-live="polite" className="text-[12px]">
-                  {status === "sent" && <span className="text-bone">Sent. I'll reply to the address you gave.</span>}
+                  {status === "sent" && <span className="text-bone font-medium">✓ Message sent successfully! I'll reply promptly.</span>}
                   {status === "error" && (
                     <span className="text-signal">
-                      Something went wrong on my end. Try again, or{" "}
+                      Could not send message. Try again or{" "}
                       <a className="underline underline-offset-4" href={mailto}>
                         email me directly
                       </a>
@@ -240,9 +255,9 @@ export function Contact() {
           </Reveal>
         </div>
 
-        <footer className="mt-28 flex flex-col justify-between gap-3 border-t border-line pt-6 md:mt-40 md:flex-row">
-          <span className="label">© 2026 {profile.name}</span>
-          <span className="label">React · Vite · TypeScript · Tailwind · Motion</span>
+        <footer className="mt-24 flex flex-col justify-between gap-3 border-t border-line pt-6 md:mt-32 md:flex-row">
+          <span className="label">© 2026 {profile.name} · CSBS @ Narula Institute of Technology</span>
+          <span className="label">React 19 · Vite · TypeScript · Tailwind CSS · Motion</span>
         </footer>
       </div>
     </section>
